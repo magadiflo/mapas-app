@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 
 import * as mapboxgl from 'mapbox-gl';
 
@@ -22,17 +22,37 @@ import * as mapboxgl from 'mapbox-gl';
     }`
   ]
 })
-export class ZoomRangeComponent implements OnInit {
+export class ZoomRangeComponent implements AfterViewInit {
+  /**
+   * El view child sirve para tomar un elemento html y ussarlo como  una propiedad común y corriente
+   * 'mapa', es la referencia local que se estableció al div en el html. 
+   * NOTA: Al trabajar con el ViewChild estaremos trabajando con las referencias locales. Estas referencias
+   * locales permitirán trabajar con múltiples instancias de un componente, ya que si declaramos un componente
+   * con un id="mapa", por ejemplo, este chocaría si creamos más instancias ya que también tendrían
+   * el id="mapa". 
+   * Al trabajar con ViewChild y las referencias locales, ANGULAR le agregará un id único por nosotros
+   */
+  @ViewChild('mapa') divMapa!: ElementRef;
+  mapa!: mapboxgl.Map;
 
   constructor() { }
 
-  ngOnInit(): void {
-    let map = new mapboxgl.Map({
-      container: 'mapa',
+  ngAfterViewInit(): void {
+    console.log('afterViewInit', this.divMapa);    
+    this.mapa = new mapboxgl.Map({
+      container: this.divMapa.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [-78.52339270267693, -9.131787495382964],
       zoom: 16,
     });
+  }
+
+  zoomIn() {
+    this.mapa.zoomIn();
+  }
+
+  zoomOut() {
+    this.mapa.zoomOut();
   }
 
 }
