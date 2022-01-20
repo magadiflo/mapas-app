@@ -9,6 +9,17 @@ import * as mapboxgl from 'mapbox-gl';
     `.mapa-container {
       width: 100%;
       height: 100%;
+    }
+    
+    .list-group {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 99;
+    }
+    
+    li {
+      cursor: pointer;
     }`
   ]
 })
@@ -28,10 +39,20 @@ export class MarcadoresComponent implements AfterViewInit {
       center: this.center,
       zoom: this.zoomLevel,
     });
+  }
 
-    new mapboxgl.Marker()
+  agregarMarcador(): void {
+    const color = '#xxxxxx'.replace(/x/g, y => (Math.random() * 16 | 0).toString(16));
+    const nuevoMarcador = new mapboxgl.Marker({
+      draggable: true,
+      color: color,
+    })
       .setLngLat(this.center)
       .addTo(this.mapa);
+  }
+
+  irMarcador(): void {
+
   }
 
 }
