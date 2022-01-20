@@ -24,7 +24,7 @@ import * as mapboxgl from 'mapbox-gl';
 })
 export class ZoomRangeComponent implements AfterViewInit {
   /**
-   * El view child sirve para tomar un elemento html y ussarlo como  una propiedad común y corriente
+   * El view child sirve para tomar un elemento html y ussarlo como  una propiedad común y corriente.
    * 'mapa', es la referencia local que se estableció al div en el html. 
    * NOTA: Al trabajar con el ViewChild estaremos trabajando con las referencias locales. Estas referencias
    * locales permitirán trabajar con múltiples instancias de un componente, ya que si declaramos un componente
@@ -34,6 +34,7 @@ export class ZoomRangeComponent implements AfterViewInit {
    */
   @ViewChild('mapa') divMapa!: ElementRef;
   mapa!: mapboxgl.Map;
+  zoomLevel: number = 10;
 
   constructor() { }
 
@@ -43,12 +44,13 @@ export class ZoomRangeComponent implements AfterViewInit {
       container: this.divMapa.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [-78.52339270267693, -9.131787495382964],
-      zoom: 16,
+      zoom: this.zoomLevel,
     });
   }
 
   zoomIn() {
     this.mapa.zoomIn();
+    this.zoomLevel = this.mapa.getZoom();
   }
 
   zoomOut() {

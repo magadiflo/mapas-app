@@ -1,7 +1,7 @@
 <div #mapa class="mapa-container"></div>
 <div class="row">
     <div class="col-12">
-        <label class="form-label">Zoom: 16 - Lng, Lat: [123,456]</label>
+        <label class="form-label">Zoom: {{ zoomLevel | number:'2.0-2' }} - Lng, Lat: [123,456]</label>
         <input type="range" class="form-range" title="range">
     </div>
     <div class="col-12">
