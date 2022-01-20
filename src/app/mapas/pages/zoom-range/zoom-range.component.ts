@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 
 import * as mapboxgl from 'mapbox-gl';
 
@@ -23,7 +23,7 @@ import * as mapboxgl from 'mapbox-gl';
     }`
   ]
 })
-export class ZoomRangeComponent implements AfterViewInit {
+export class ZoomRangeComponent implements AfterViewInit, OnDestroy {
   /**
    * El view child sirve para tomar un elemento html y ussarlo como  una propiedad común y corriente.
    * 'mapa', es la referencia local que se estableció al div en el html. 
@@ -36,25 +36,39 @@ export class ZoomRangeComponent implements AfterViewInit {
   @ViewChild('mapa') divMapa!: ElementRef;
   mapa!: mapboxgl.Map;
   zoomLevel: number = 10;
+  center: [number, number] = [-78.52339270267693, -9.131787495382964];
 
   constructor() { }
 
-  ngAfterViewInit(): void {  
+  ngOnDestroy(): void {
+    this.mapa.off('zoom', () => { });
+    this.mapa.off('zoomend', () => { });
+    this.mapa.off('move', () => { });
+  }
+
+  ngAfterViewInit(): void {
     this.mapa = new mapboxgl.Map({
       container: this.divMapa.nativeElement,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [-78.52339270267693, -9.131787495382964],
+      center: this.center,
       zoom: this.zoomLevel,
     });
-    
+
     this.mapa.on('zoom', () => {
-      this.zoomLevel = this.mapa.getZoom();  
+      this.zoomLevel = this.mapa.getZoom();
     });
 
     this.mapa.on('zoomend', () => {
-      if(this.mapa.getZoom() > 18){
+      if (this.mapa.getZoom() > 18) {
         this.mapa.zoomTo(18);
       }
+    });
+
+    //Movimiento del mapa
+    this.mapa.on('move', (event) => {
+      const target = event.target;
+      const { lat, lng } = target.getCenter();
+      this.center = [lng, lat];
     });
   }
 
@@ -67,7 +81,7 @@ export class ZoomRangeComponent implements AfterViewInit {
   }
 
   zoomCambio(valor: string) {
-    this.mapa.zoomTo(Number(valor));  
+    this.mapa.zoomTo(Number(valor));
   }
 
 }
