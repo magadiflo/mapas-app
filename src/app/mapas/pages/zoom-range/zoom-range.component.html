@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-12">
         <label class="form-label">Zoom: {{ zoomLevel | number:'2.0-2' }} - Lng, Lat: [123,456]</label>
-        <input type="range" class="form-range" title="range">
+        <input type="range" #zoomInput (input)="zoomCambio(zoomInput.value)" class="form-range" title="range" [value]="zoomLevel" min="0" max="18">
     </div>
     <div class="col-12">
         <button type="button" class="btn btn-primary" (click)="zoomOut()">-</button>
